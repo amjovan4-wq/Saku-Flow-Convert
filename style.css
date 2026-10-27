@@ -1,0 +1,291 @@
+/* ===== Reset & variabel warna ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Elemen dengan atribut hidden selalu tersembunyi */
+[hidden] { display: none !important; }
+
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --teks: #1f2937;
+  --abu: #6b7280;
+  --utama: #2563eb;
+  --bahaya: #dc2626;
+  --peringatan: #d97706;
+  --ok: #16a34a;
+  --garis: #e5e7eb;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--teks);
+  line-height: 1.5;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+h1 { text-align: center; margin: 12px 0 16px; font-size: 1.5rem; }
+h2 { font-size: 1.1rem; margin-bottom: 12px; }
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Ringkasan ===== */
+.label { color: var(--abu); font-size: 0.85rem; }
+.total { font-size: 1.8rem; font-weight: 700; color: var(--utama); }
+
+.ringkasan { list-style: none; margin-top: 12px; }
+.ringkasan li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--garis);
+  font-size: 0.95rem;
+}
+
+/* ===== Form & input (font 16px agar tidak auto-zoom di HP) ===== */
+#form { display: grid; gap: 12px; }
+label { display: grid; gap: 4px; font-size: 0.9rem; color: var(--abu); }
+
+input, select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--garis);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--teks);
+  background: #fff;
+}
+input:focus, select:focus { outline: 2px solid var(--utama); }
+
+button {
+  min-height: 44px;           /* ukuran nyaman untuk jempol */
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--utama);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button:hover { opacity: 0.9; }
+button:disabled { opacity: 0.6; cursor: default; }
+
+button.sekunder {
+  background: #fff;
+  color: var(--utama);
+  border: 1px solid var(--utama);
+}
+
+.baris { display: flex; gap: 8px; }
+.baris input { flex: 1; }
+.baris button { white-space: nowrap; }
+
+.lebar { width: 100%; margin-top: 12px; }
+
+.tombol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.catatan { margin-top: 12px; font-size: 0.82rem; color: var(--abu); }
+
+/* ===== Budget & status ===== */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.stat {
+  border: 1px solid var(--garis);
+  border-radius: 10px;
+  padding: 10px;
+}
+.stat .nilai { font-size: 1.15rem; font-weight: 700; }
+
+.bar {
+  height: 8px;
+  background: var(--garis);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 6px 0 4px;
+}
+.bar .isi {
+  height: 100%;
+  width: 0;
+  background: var(--ok);
+  transition: width 0.3s;
+}
+.bar .isi.peringatan { background: var(--peringatan); }
+.bar .isi.bahaya { background: var(--bahaya); }
+
+.teks-ok { color: var(--ok); }
+.teks-peringatan { color: var(--peringatan); }
+.teks-bahaya { color: var(--bahaya); }
+
+/* ===== Banner notifikasi ===== */
+.notif {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  max-width: 704px;
+  margin: 0 auto;
+  z-index: 100;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  white-space: pre-line;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+.notif-bahaya { background: var(--bahaya); }
+.notif-peringatan { background: var(--peringatan); }
+.notif-info { background: var(--utama); }
+.notif button {
+  min-height: 32px;
+  padding: 2px 10px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== EXP Hemat ===== */
+.exp-utama { margin-bottom: 14px; }
+.nilai-besar { font-size: 2rem; font-weight: 700; color: var(--utama); line-height: 1.2; }
+.bar .isi.exp { background: var(--utama); }
+
+#formTukar { display: grid; gap: 10px; }
+#formTukar .lebar { margin-top: 0; }
+.stat-grid.dua { grid-template-columns: 1fr 1fr; }
+
+.subjudul { font-size: 0.95rem; margin: 16px 0 8px; }
+.riwayat-tukar { list-style: none; }
+.riwayat-tukar li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--garis);
+  font-size: 0.92rem;
+}
+
+.pesan-game { margin-top: 12px; padding: 10px 12px; border-radius: 8px; font-size: 0.92rem; }
+.pesan-game.ok { background: #f0fdf4; color: #166534; }
+.pesan-game.peringatan { background: #fffbeb; color: #92400e; }
+.pesan-game.bahaya { background: #fef2f2; color: #991b1b; }
+
+.badge-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.badge { border: 1px solid var(--garis); border-radius: 99px; padding: 4px 10px; font-size: 0.82rem; }
+.badge.terbuka { border-color: var(--ok); color: #166534; background: #f0fdf4; }
+.badge.terkunci { color: var(--abu); background: #f9fafb; }
+
+.aturan { margin-top: 12px; font-size: 0.85rem; color: var(--abu); }
+.aturan summary { cursor: pointer; color: var(--utama); min-height: 32px; }
+.aturan ul { margin: 8px 0 0 18px; display: grid; gap: 6px; }
+
+/* ===== Iklan sponsor ===== */
+.sponsor { padding: 10px 12px; border: 1px dashed var(--garis); background: #fafafa; box-shadow: none; }
+.sponsor-label { font-size: 0.72rem; color: var(--abu); margin-bottom: 6px; }
+.sponsor-isi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  color: var(--teks);
+  text-decoration: none;
+}
+.sponsor-isi img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex: none; }
+.sponsor-isi > span { display: grid; gap: 2px; font-size: 0.9rem; }
+.sponsor-isi strong { font-size: 0.95rem; }
+.sponsor-isi.kosong-iklan { color: var(--abu); justify-content: center; text-align: center; }
+.sponsor-isi:focus-visible { outline: 2px solid var(--utama); outline-offset: 2px; }
+
+/* ===== Tabel ===== */
+.tabel-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { padding: 8px; text-align: left; border-bottom: 1px solid var(--garis); }
+th { color: var(--abu); font-weight: 600; }
+td.angka { white-space: nowrap; }
+
+.hapus {
+  min-height: 36px;
+  background: transparent;
+  color: var(--bahaya);
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  border: 1px solid var(--bahaya);
+}
+
+.kosong { text-align: center; color: var(--abu); padding: 12px 0; }
+
+.hanya-cetak { display: none; }
+
+/* ===== Layar lebar ===== */
+@media (min-width: 600px) {
+  .container { padding: 16px; }
+  #form { grid-template-columns: 1fr 1fr; }
+  #form button { grid-column: span 2; }
+  .tombol-grid { grid-template-columns: repeat(4, 1fr); }
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ===== HP kecil ===== */
+@media (max-width: 380px) {
+  .stat-grid, .stat-grid.dua { grid-template-columns: 1fr; }
+}
+
+/* ===== HP: tiap transaksi tampil sebagai kartu kecil ===== */
+@media screen and (max-width: 599px) {
+  thead { display: none; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tr {
+    border: 1px solid var(--garis);
+    border-radius: 10px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+  }
+  td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: none;
+    padding: 4px 0;
+    text-align: right;
+  }
+  td::before {
+    content: attr(data-label);
+    color: var(--abu);
+    text-align: left;
+  }
+  td.aksi { justify-content: flex-end; }
+  td.aksi::before { content: none; }
+}
+
+/* ===== Cetak lewat browser (Ctrl + P) ===== */
+@media print {
+  body { background: #fff; }
+  .tidak-dicetak, .aksi, .notif { display: none !important; }
+  .hanya-cetak { display: block; margin-bottom: 12px; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  .container { max-width: none; padding: 0; }
+  h1 { display: none; }
+  tr { break-inside: avoid; }
+}

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saku Flow - Pencatat Pengeluaran</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PWA: supaya bisa dipasang di layar utama HP -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Pengeluaran">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+  <!-- Banner notifikasi (muncul saat pengeluaran melewati batas) -->
+  <div id="notif" class="notif" role="alert" hidden>
+    <span id="notifTeks"></span>
+    <button type="button" id="notifTutup" aria-label="Tutup notifikasi">✕</button>
+  </div>
+
+  <main class="container">
+    <h1>💰 Saku Flow 💰</h1>
+
+    <!-- Judul khusus saat dicetak lewat browser (Ctrl + P) -->
+    <div class="hanya-cetak">
+      <h2>Laporan Pengeluaran</h2>
+      <p>Periode: <strong id="periodeCetak"></strong></p>
+      <p>Dicetak: <span id="tanggalCetak"></span></p>
+    </div>
+
+    <!-- Pilih periode -->
+    <section class="card tidak-dicetak">
+      <label>Periode (bulan)
+        <div class="baris">
+          <input type="month" id="bulan">
+          <button type="button" id="btnSemua" class="sekunder">Semua bulan</button>
+        </div>
+      </label>
+    </section>
+
+    <!-- Budget bulanan & batas harian -->
+    <section class="card tidak-dicetak">
+      <h2>Budget Bulanan</h2>
+      <p id="budgetInfo" class="label"></p>
+      <form id="formBudget">
+        <label>Uang pegangan awal bulan (Rp)
+          <div class="baris">
+            <input type="number" id="budget" min="0" inputmode="numeric" placeholder="Contoh: 1500000">
+            <button type="submit">Simpan</button>
+          </div>
+        </label>
+      </form>
+
+      <div id="statusBudget" hidden>
+        <div class="stat-grid">
+          <div class="stat">
+            <p class="label">Batas pengeluaran harian</p>
+            <p class="nilai" id="sBatas"></p>
+            <p class="label" id="sBatasKet"></p>
+          </div>
+          <div class="stat">
+            <p class="label">Sisa budget bulan ini</p>
+            <p class="nilai" id="sSisa"></p>
+            <div class="bar"><div id="barBulan" class="isi"></div></div>
+            <p class="label" id="sSisaKet"></p>
+          </div>
+          <div class="stat" id="blokHari" hidden>
+            <p class="label">Terpakai hari ini</p>
+            <p class="nilai" id="sHari"></p>
+            <div class="bar"><div id="barHari" class="isi"></div></div>
+            <p class="label" id="sHariKet"></p>
+          </div>
+          <div class="stat" id="blokSaran" hidden>
+            <p class="label">Aman dipakai per hari sampai akhir bulan</p>
+            <p class="nilai" id="sSaran"></p>
+          </div>
+          <div class="stat">
+            <p class="label">Hari melebihi batas</p>
+            <p class="nilai" id="sMelebihi"></p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="btnNotif" class="sekunder lebar">🔔 Aktifkan notifikasi browser</button>
+    </section>
+
+    <!-- EXP Hemat: EXP bisa ditukar menjadi Rupiah -->
+    <section class="card tidak-dicetak">
+      <h2>⭐ EXP Hemat</h2>
+
+      <div class="exp-utama">
+        <p class="label">EXP yang bisa ditukar</p>
+        <p class="nilai-besar" id="eTersedia"></p>
+        <p class="label" id="eNilai"></p>
+        <div class="bar"><div id="barTukar" class="isi exp"></div></div>
+        <p class="label" id="eMin"></p>
+      </div>
+
+      <form id="formTukar">
+        <label>Jumlah EXP yang ditukar
+          <div class="baris">
+            <input type="number" id="inputTukar" min="1" step="1" inputmode="numeric" placeholder="Contoh: 100">
+            <button type="button" id="btnTukarSemua" class="sekunder">Semua</button>
+          </div>
+        </label>
+        <button type="submit" class="lebar">🎁 Tukar menjadi Rupiah</button>
+      </form>
+
+      <div class="stat-grid dua">
+        <div class="stat">
+          <p class="label">Total EXP didapat</p>
+          <p class="nilai" id="eTotal"></p>
+        </div>
+        <div class="stat">
+          <p class="label">Sudah ditukar</p>
+          <p class="nilai" id="eDitukar"></p>
+        </div>
+        <div class="stat">
+          <p class="label">Beruntun hemat</p>
+          <p class="nilai" id="eStreak"></p>
+          <p class="label" id="eStreakKet"></p>
+        </div>
+        <div class="stat">
+          <p class="label">EXP hari ini (sementara)</p>
+          <p class="nilai" id="eHariIni"></p>
+        </div>
+      </div>
+
+      <p id="ePesan" class="pesan-game"></p>
+      <ul id="eBadge" class="badge-list"></ul>
+
+      <h3 class="subjudul">Riwayat penukaran</h3>
+      <ul id="eRiwayat" class="riwayat-tukar"></ul>
+      <p id="eRiwayatKosong" class="kosong">Belum ada penukaran.</p>
+
+      <details class="aturan">
+        <summary>Cara mendapat dan menukar EXP</summary>
+        <ul id="eAturan"></ul>
+      </details>
+    </section>
+
+    <!-- Slot iklan sponsor (isi lewat sponsor.js) -->
+    <aside class="card sponsor tidak-dicetak" data-sponsor aria-label="Iklan sponsor"></aside>
+
+    <!-- Ringkasan -->
+    <section class="card summary">
+      <p class="label">Total Pengeluaran — <span id="labelPeriode"></span></p>
+      <p id="total" class="total">Rp 0</p>
+      <p id="jumlah" class="label"></p>
+      <ul id="ringkasan" class="ringkasan"></ul>
+    </section>
+
+    <!-- Form input -->
+    <section class="card tidak-dicetak">
+      <h2>Tambah Pengeluaran</h2>
+      <form id="form">
+        <label>Tanggal
+          <input type="date" id="tanggal" required>
+        </label>
+        <label>Keterangan
+          <input type="text" id="keterangan" maxlength="100" placeholder="Contoh: Makan siang" required>
+        </label>
+        <label>Kategori
+          <select id="kategori">
+            <option>Makan</option>
+            <option>Transport</option>
+            <option>Kuliah</option>
+            <option>Hiburan</option>
+            <option>Lainnya</option>
+          </select>
+        </label>
+        <label>Nominal (Rp)
+          <input type="number" id="nominal" min="1" inputmode="numeric" placeholder="15000" required>
+        </label>
+        <button type="submit">Tambah</button>
+      </form>
+    </section>
+
+    <!-- Daftar transaksi -->
+    <section class="card">
+      <h2>Riwayat</h2>
+      <div class="tabel-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Nominal</th>
+              <th class="aksi"></th>
+            </tr>
+          </thead>
+          <tbody id="daftar"></tbody>
+        </table>
+      </div>
+      <p id="kosong" class="kosong">Belum ada data pada periode ini.</p>
+    </section>
+
+    <!-- Laporan & backup -->
+    <section class="card tidak-dicetak">
+      <h2>Laporan &amp; Backup</h2>
+      <div class="tombol-grid">
+        <button type="button" id="btnPdf">📕 Unduh Rekap PDF</button>
+        <button type="button" id="btnCsv" class="sekunder">📄 Export CSV</button>
+        <button type="button" id="btnBackup" class="sekunder">💾 Backup (JSON)</button>
+        <button type="button" id="btnRestore" class="sekunder">📂 Restore (JSON)</button>
+      </div>
+      <input type="file" id="fileRestore" accept=".json,application/json" hidden>
+      <p class="catatan">
+        Rekap PDF mengikuti bulan yang dipilih di bagian Periode.
+        Data tersimpan di browser perangkat ini. Backup berkala supaya data aman,
+        dan gunakan Backup lalu Restore untuk memindahkan data ke perangkat lain.
+      </p>
+    </section>
+  </main>
+
+  <script src="pdf.js"></script>
+  <script src="exp.js"></script>
+  <script src="script.js"></script>
+  <script src="sponsor.js"></script>
+  <script>
+    // Daftarkan service worker (agar bisa offline). Hanya jalan lewat https:// atau localhost.
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js").catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
